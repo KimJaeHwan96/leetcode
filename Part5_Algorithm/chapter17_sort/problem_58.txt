@@ -119,3 +119,40 @@ class Solution:
     내 머릿속에는 재귀대신 반복문을 사용하려면 노드를 생성하여 연결리스트로 만들도록 해야한다고 생각된다.
     그러면 결국 처음으로 회귀하니 재귀가 가장 낫다고 생각되어진다.
     혹시 더 나은 방법이 있는지 고민해봐야겠다.
+
+------------------------------------------------------------------------
+연결리스트 -> 리스트, 리스트 -> 연결리스트로 해결
+
+def sortList(self, head: ListNode) -> ListNode:
+        lst = []
+        while head:
+            lst.append(head.val)
+            head = head.next
+        lst.sort()
+        head = ListNode()
+        tmp = head
+        for l in lst:
+            dummy = ListNode(val=l)
+            tmp.next = dummy
+            tmp = dummy
+
+        return head.next
+기존 구조를 이용하지 않고 새로운 노드를 이용하여 공간복잡도와 코드의 길이를 늘리고 있다.
+
+def sortList(self, head: ListNode) -> ListNode:
+        lst = []
+        pointer = head
+        while pointer:
+            lst.append(pointer.val)
+            pointer = pointer.next
+        lst.sort()
+        pointer = head
+        for l in lst:
+            pointer.val = l
+            pointer = pointer.next
+        return head
+연결리스트 구조는 둔 채 포인터를 이용하여 참조하는 코드이다. 훨씬 깔끔하고 시간도 빠르다
+
+정렬은 파이썬의 내장함수에 맞기도록 하는 방법이다. 어떻게 정렬할지 신경쓰지 않고 간결하게 작성할 수 있다.
+병합정렬은 약 600ms, 각 리스트와 연결리스트로 변형하여 정렬하더라도 약 164ms 이므로 실제로는 내장함수를 이용하고
+이해는 병합정렬로 이해하는 것이 도움이 될 것같다.
