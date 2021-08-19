@@ -1,5 +1,7 @@
+"""
 [medium] 56. Merge Intervals
 https://leetcode.com/problems/merge-intervals/
+"""
 
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
@@ -20,6 +22,7 @@ class Solution:
                 answer.append(interval)
         return answer
 
+"""
 기본적인 로직은 이렇다
 1. 앞 list[1]와 뒤 list[0]를 비교한다.
    1) 앞 list[1] > 뒤 list[0] => 병합 가능
@@ -30,6 +33,7 @@ class Solution:
 
 중첩 if 문과 여러가지를 전부 따지면서 코드가 길어지고 가독성이 떨어진다.
 게다가 intervals.sort()로 정렬은 되지만 책에는 첫번쨰 원소를 기준으로 하는 것을 보면 더 안전한듯 보인다.
+"""
 
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
@@ -43,6 +47,7 @@ class Solution:
 
         return answer
 
+"""
 가독성이 그렇게 떨어지지 않는 범위에서 책의 내용을 이용해 리팩토링해봤다.
 속도는 동일하지만 길이에서 차이가 난다.
 
@@ -62,3 +67,4 @@ a += [b]
 [1,[2,3]]
 
 이렇게 된다고 한다.
+"""
