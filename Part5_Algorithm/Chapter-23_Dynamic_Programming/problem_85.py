@@ -66,3 +66,18 @@ class Solution:
 
         self.dict[n] = self.fib(n - 2) + self.fib(n - 1)
         return self.dict[n]
+
+
+"""
+마이나믹 프로그래밍으로 이정도만 실행시간을 줄여도 훌륭하다고 판단했다.
+아마 피보나치 수열이기 때문에 가능한 풀이겠지만 공간복잡도도 줄일 수 있다는 건 매력적이라고 생각했다.
+아래는 책에서 본 풀이인데 복잡하지 않고 속도도 다이나믹 프로그래밍과 크게 차이가 나지 않아 마음에 드는 풀이다. 
+"""
+
+
+class Solution:
+    def fib(self, n: int) -> int:
+        x, y = 0, 1
+        for i in range(0, n):
+            x, y = y, x + y
+        return x
