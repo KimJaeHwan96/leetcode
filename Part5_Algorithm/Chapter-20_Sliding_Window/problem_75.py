@@ -55,26 +55,33 @@ class Solution:
 놀랍게도 똑같이 timeout 이 발생했다.
 
 https://leetcode.com/problems/sliding-window-maximum/discuss/65901/9-lines-Ruby-11-lines-Python-O(n)
+리트코드의 다른 풀이를 보고 타임아웃이 발생하지 않는 코드를 찾아봤다.
 """
 
 
 class Solution:
     def maxSlidingWindow(self, nums, k):
         res = []
-        bigger = deque()
+        window = deque()
         for idx, num in enumerate(nums):
-            # make sure the rightmost one is the smallest
-            while bigger and nums[bigger[-1]] <= num:
-                bigger.pop()
+            # 최대값은 가장 앞에다 저장
+            while window and nums[window[-1]] <= num:
+                window.pop()
+            window.append(idx)
 
-            # add in
-            bigger.append(idx)
+            # 윈도우 크기(k) 이상이면 맨 앞의 값을 제거
+            if idx - window[0] >= k:
+                window.popleft()
 
-            # make sure the leftmost one is in-bound
-            if idx - bigger[0] >= k:
-                bigger.popleft()
-
-            # if idx + 1 < k, then we are initializing the bigger array
+            # k- 1개 까지는 넣기만하고 그 후에 최대값을 리스트에 저장한다.
             if idx + 1 >= k:
-                res.append(nums[bigger[0]])
+                res.append(nums[window[0]])
         return res
+
+
+"""
+위에 있는 책의 풀이와 다른 점은 max 함수와 float('-inf'), window 에 숫자대신 인덱스를 넣는 것인데 
+시간 복잡도의 영향을 주는 것은 max 함수이지 않을까 생각된다.
+timeit 으로 속도를 측정할 때 해당 풀이가 책의 풀이보다 더 빨랐다.
+단순히 max 함수이기 때문에 오래걸렸다기 보단 window 크기에서의 최대값이라는 제약이 있어 max 함수를 여러번 연산하기 때문에 타임아웃이 발생하지 않았을까 하는 생각이 든다. 
+"""
