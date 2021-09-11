@@ -2,6 +2,7 @@
 [Easy] 704. Binary Search
 https://leetcode.com/problems/binary-search/
 """
+from bisect import bisect_left
 from typing import List
 
 """
@@ -42,6 +43,25 @@ class Solution:
 
 
 """
-물론 이런 코드는 실무에서만 쓰고 코딩테스트 이므로 이런 풀이는 적절하지 않아보인다.
+물론 이런 코드는 실무에서만 쓰고 코딩테스트에서 이런 풀이를 하는 것은 적절하지 않아보인다.
+
+차라리 이진검색을 지원하는 bisect 모듈을 사용하는 것이 더 좋아보인다.
 """
 
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        target_idx = bisect_left(nums, target)
+
+        if target_idx < len(nums) and nums[target_idx] == target:
+            return target_idx
+        else:
+            return -1
+
+
+"""
+bisect 모듈은 이진 검색 그 자체를 지원한다기 보단 이진 검색을 통해 삽입을 위치를 알려준다. 그러므로 target 을 삽입할 위치를 리턴해준다.
+리스트에 있는 값이 target 과 같다면 bisect_left 는 그 값의 인덱스를 리턴하고 bisect_right 는 그 값의 인덱스 + 1를 리턴한다.
+그래서 bisect_left 를 사용해서 nums 에 target 의 위치를 리턴받았다. 하지만 이대로 끝난 것은 아니다.
+nums 에 없는 값을 넣었을 경우에도 삽입할 인덱스를 리턴해주므로 값을 비교해주고(nums[target_idx] == target), 범위에 넘어선값이 있는지 검증한다.(target_idx < len(nums))
+"""
