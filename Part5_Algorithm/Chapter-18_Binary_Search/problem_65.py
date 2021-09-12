@@ -2,7 +2,6 @@
 [Easy] 704. Binary Search
 https://leetcode.com/problems/binary-search/
 """
-import bisect
 from bisect import bisect_left
 from typing import List
 
@@ -147,3 +146,29 @@ timeit -n 10000 binary_search(a, 9999999)
 
 결론: 정렬이 되어있다는 가정하에 bisect 모듈이 더 빠르고 정렬이 되어있지 않으면 index 함수가 더 빠르다
 """
+
+
+"""
+이진 검색 알고리즘의 버그가 있다. left + right // 2  으로 인덱스를 구하는 코드이다.
+수학적으로는 아무런 문제가 없지만, 컴퓨터 과학적으로 봤을 때 C 나 JAVA 의 경우 표현할 수 있는 정수값에 한계가 있다.
+즉, left + right 이 연산이 오버플로우를 발생시킬 수 있다는 것이다.
+사실 파이썬은 임의정밀도 정수형을 지원하여 문제가 없다고 한다.(임의정밀도는 정수를 숫자들의 배열로 표현하여 무제한 자릿수를 제공하는데 계산 속도 저하가 된다.) 
+하지만 다른 프로그래밍 언어를 사용할 때 생각할 필요가 있는 문제이기도 하다.
+"""
+
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        def binary_search(left, right):
+            if left > right:
+                return -1
+            mid = left + (right - left) // 2
+
+            if nums[mid] > target:
+                return binary_search(left, mid - 1)
+            elif nums[mid] < target:
+                return binary_search(mid + 1, right)
+            else:
+                return mid
+
+        return binary_search(0, len(nums) - 1)
