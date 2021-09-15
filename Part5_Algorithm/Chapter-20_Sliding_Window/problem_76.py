@@ -54,3 +54,38 @@ class Solution:
 
 start 와 end 를 0 으로 초기화한 이유는 찾으려는 값이 없는 경우 "" 으로 빈값을 리턴해주기 위함이다.
 """
+
+
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        t_count = Counter(t)
+        current_count = Counter()
+
+        # start, end 를 0 으로 초기화 하는대신 start 는 최소값 end 는 최대값으로 초기화
+        start = float('-inf')
+        end = float('inf')
+
+        left = 0
+        # 오른쪽 포인터 이동
+        for right, char in enumerate(s, 1):
+            current_count[char] += 1
+
+            # AND 연산 결과로 왼쪽 포인터 이동 판단
+            # current_count 가 t 의 문자를 모두 포함해야만 True 가 된다.
+            while current_count & t_count == t_count:
+                if right - left < end - start:
+                    start, end = left, right
+                # 그전 풀이와 똑같이 왼쪽 포인터를 오른쪽으로 옮긴다.
+                # 이때 current_count & t_count == t_count 가 True 이어야 쓸모없는 값들이 제거가 된다.
+                current_count[s[left]] -= 1
+                left += 1
+
+        # t 보다 s 가 더 작을때의 분기문이다.
+        return s[start: end] if end - start <= len(s) else ''
+
+
+"""
+다음 풀이는 그전 풀이보다 더 쉬운 코드이다. 이 풀이를 통해 배운 건 "Counter 끼리 AND 연산이 가능하다" 이다.
+current_count & t_count == t_count 이 현재 윈도우에서 t 의 문자를 전부 포함한다는 의미이므로 missing == 0 과 동일하다.
+다만 Counter 간의 AND 연산이 무거워서 그런지 1832 ms로 그 전 풀이보다 10배나 그린 속도가 나온다.
+"""
