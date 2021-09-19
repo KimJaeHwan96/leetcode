@@ -1,7 +1,9 @@
 """
-[medium] 148
+[medium] 148 Sort List
 https://leetcode.com/problems/sort-list/
+"""
 
+"""
 -문제파악
 오름차순으로 정렬하는 문제다.
 중요한 것은 연결리스트로 구현된 상태인것같다.
@@ -22,6 +24,7 @@ https://leetcode.com/problems/sort-list/
 이때 끝은 노드가 짝수개 일때 None, 홀수개 일때 마지막 노드를 말한다.
 head ~ slow 전, slow ~ 로 리스트를 나누면 될 것 같다.
 """
+
 
 # 일단 작성해본 코드
 class ListNode:
@@ -68,6 +71,8 @@ class Solution:
                 right = right.next
 
         return head.next
+
+
 """
 분할하는 과정은 이해가 가지만 병합하는 과정이 난잡하며 효율도 좋아보이지 않는다.
 기존 연결리스트는 두고 ListNode를 생성하며 새로운 연결리스트를 만들려는 코드다.
@@ -94,6 +99,7 @@ while left or right:
 순서대로 실행해야하고 값을 비교하는 즉시 비교하는 반복문보단
 현재 상태에서 원하는 값을 갖고 그 값을 제외한 후 나머지 값은 다시 merge 함수를 호출하도록 하는 재귀가 좋아보인다.
 """
+
 
 class Solution:
     def sortList(self, head: ListNode) -> ListNode:
@@ -122,8 +128,8 @@ class Solution:
     혹시 더 나은 방법이 있는지 고민해봐야겠다.
     """
 
-# 연결리스트 -> 리스트, 리스트 -> 연결리스트로 해결
 
+# 연결리스트 -> 리스트, 리스트 -> 연결리스트로 해결
 def sortList(self, head: ListNode) -> ListNode:
         lst = []
         while head:
@@ -138,6 +144,7 @@ def sortList(self, head: ListNode) -> ListNode:
             tmp = dummy
 
         return head.next
+
 
 """
 기존 구조를 이용하지 않고 새로운 노드를 이용하여 공간복잡도와 코드의 길이를 늘리고 있다.
@@ -154,6 +161,7 @@ def sortList(self, head: ListNode) -> ListNode:
             pointer.val = l
             pointer = pointer.next
         return head
+
 
 """
 연결리스트 구조는 둔 채 포인터를 이용하여 참조하는 코드이다. 훨씬 깔끔하고 시간도 빠르다
