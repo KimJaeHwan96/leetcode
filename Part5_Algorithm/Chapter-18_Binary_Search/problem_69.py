@@ -32,3 +32,35 @@ class Solution:
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
         return any([target in num_list for num_list in matrix])
+
+
+"""
+이런 풀이방식도 있다. 2차원 리스트 전체를 보며 target 을 찾는 것이다.
+"""
+
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        row = 0
+        col = len(matrix[0]) - 1
+
+        while row <= len(matrix) - 1 and col >= 0:
+            current_value = matrix[row][col]
+            if target < current_value:
+                col -= 1
+            elif target > current_value:
+                row += 1
+            else:
+                return True
+        return False
+
+
+"""
+첫 행의 맨 뒤의 값을 기준으로 아래에 있는 값은 더 큰 값들만 있고 왼쪽에 있는 값은 더 작은 값들만 있다.
+row = 0
+col = len(matrix[0]) - 1
+으로 matrix[row][col] 이 값을 기준으로 값들을 찾는다.
+만약 target 이 matrix[row][col] 보다 크면 0번째 리스트는 전부 제외할 수 있고 matrix[row][col] 보다 작으면 len(matrix[0]) - 1 열은 더이상 관심을 둘 필요가 없다.
+(왜냐하면 target 이 matrix[row][col] 보다 더 작으면 len(matrix[0]) - 1 열의 값들보단 작을 수 밖에 없고 matrix[row][col] 보다 크면 0번째 행의 값들보단 클 수 밖에 없다.)
+그래서 왼쪽과 아래쪽으로만 가면서 target 을 찾으면 된다.
+"""
