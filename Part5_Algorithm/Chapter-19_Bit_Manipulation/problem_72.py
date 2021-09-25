@@ -48,3 +48,32 @@ class Solution:
             # ~ 으로 양수를 음수로 다시 변환
             result = ~(result ^ MASK)
         return result
+
+
+"""
+위 풀이보다 좀더 간결한 풀이 방법이 있다. 다음 풀이는 어떤 아이디어를 갖고있는지 아는 것이 중요하다.
+"""
+
+
+class Solution:
+    def getSum(self, a: int, b: int) -> int:
+        MASK = 0xFFFFFFFF
+        INT_MAX = 0x7FFFFFFF
+
+        while b != 0:
+            a, b = (a ^ b) & MASK, ((a & b) << 1) & MASK
+
+        if a > INT_MAX:
+            a = ~(a * MASK)
+        return a
+
+
+"""
+a ^ b 는 carry 를 신경쓰지 않는 덧셈이다.
+0 + 1, 1 + 0 이면 1이 되고 0 + 0 뿐만 아니라 1 + 1 도 0 이 된다.
+그렇다면 carry 는 어떻게 구할까? carry 는 1 + 1 일때 발생한다. 그렇다면 AND 연산으로 구할 수 있다. 
+물론 여기서 끝이 아니다. carry 가 발생하면 해당 자리수가 아니라 앞 자리수로 가기 때문에 왼쪽으로 한번 shift 해야한다.
+그러면 덧셈과 carry 를 구할 수 있고 carry 가 발생하지 않을 때 까지 해당 연산을 하면 된다. (a 에는 carry 를 신경쓰지 않는 덧셈을 두고 b 에는 carry 를 둔다.)
+
+참고: https://leetcode.com/problems/sum-of-two-integers/discuss/132479/Simple-explanation-on-how-to-arrive-at-the-solution
+"""
