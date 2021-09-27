@@ -69,3 +69,44 @@ class Solution:
 나중에 다시 보면서 어떤 코드가 더 직관적이고 읽기 쉬운지 비교해 볼 것이다.
 지금은 두 번째 로직이 더 낫지 않을까 하는 생각이 든다.
 """
+
+
+"""
+리트코드의 discuss 를 보다가 훨씬 빠르고 간결한 멋진 풀이를 발견했다. 바로 카데인 알고리즘을 이용하는 것이다. 시간복잡도는 O(n) 으로 훨씬 빠르다.
+참고: https://leetcode.com/problems/longest-repeating-character-replacement/discuss/278271/JavaC%2B%2BPython-Sliding-Window-O(N)
+"""
+
+
+class Solution:
+    def characterReplacement(self, string: str, k: int) -> int:
+        max_length = max_count = 0
+        count = defaultdict(int)
+        for idx in range(len(string)):
+            count[string[idx]] += 1
+
+            # 새로운 문자의 길이가 max_length 보다 긴지만 고려한다.
+            max_count = max(max_count, count[string[idx]])
+            # 항상 max_length 는  k + max_count 를 유지한다.
+            if max_length < k + max_count:
+                max_length += 1
+            else:
+                # max_length 를 구했으므로 맽 앞의 문자를 제거한다.
+                count[string[idx-max_length]] -= 1
+        return max_length
+
+
+"""
+핵심은 가장 큰 값들을 어딘가에 저장한다는 것이다.
+
+max_length : 가장 긴 문자열
+max_count : 가장 빈도 수가 많은 문자
+count : 현재 부분 문자열
+
+max_length 와 max_count 는 반복문을 돌면서 더 큰 값이면 갱신한다. (현재 부분 문자열에 대한 값이 아닌 '가장' 큰 값을 저장한 변수다.)
+count 는 윈도우 크기에 맞도록 반복문마다 갱신을 한다.
+
+그 전 두 풀이는 현재 right 와 left 로 답을 구하기 때문에 투 포인터가 필요했고 포인터들을 옮겨야했다.
+하지만 카데인 알고리즘을 이용한 풀이는 최대 빈도 문자와 최대 길이 부분 문자열을 저장하여 더 큰 값인 경우에만 갱신을 하고 left 포인터를 움직일 필요가 없어 문자열 길이 만큼의 속도가 나왔다.
+첫 번째, 두 번째 투 포인터를 이용한 풀이는 최악의 경우 O(N + M) 이고 세 번째 카데인 알고리즘을 이용한 풀이는 최악의 경우여도 O(N) 이다.
+(투 포인터는 최악의 경우 right 포인터와 left 포인터를 각각 N, M 번만큼 이동해야하는 반면 카데인 알고리즘은 문자열 길이만큼만 이동하면 해결이 된다.)
+"""
