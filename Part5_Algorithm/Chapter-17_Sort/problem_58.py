@@ -2,6 +2,7 @@
 [medium] 148 Sort List
 https://leetcode.com/problems/sort-list/
 """
+from typing import Optional
 
 """
 -문제파악
@@ -122,43 +123,25 @@ class Solution:
                 left, right = right, left
             left.next = self.merge(left.next, right)
         return left or right
-    """
-    내 머릿속에는 재귀대신 반복문을 사용하려면 노드를 생성하여 연결리스트로 만들도록 해야한다고 생각된다.
-    그러면 결국 처음으로 회귀하니 재귀가 가장 낫다고 생각되어진다.
-    혹시 더 나은 방법이 있는지 고민해봐야겠다.
-    """
-
-
-# 연결리스트 -> 리스트, 리스트 -> 연결리스트로 해결
-def sortList(self, head: ListNode) -> ListNode:
-        lst = []
-        while head:
-            lst.append(head.val)
-            head = head.next
-        lst.sort()
-        head = ListNode()
-        tmp = head
-        for l in lst:
-            dummy = ListNode(val=l)
-            tmp.next = dummy
-            tmp = dummy
-
-        return head.next
 
 
 """
-기존 구조를 이용하지 않고 새로운 노드를 이용하여 공간복잡도와 코드의 길이를 늘리고 있다.
+내 머릿속에는 재귀대신 반복문을 사용하려면 노드를 생성하여 연결리스트로 만들도록 해야한다고 생각된다.
+그러면 결국 처음으로 회귀하니 재귀가 가장 낫다고 생각되어진다.
+혹시 더 나은 방법이 있는지 고민해봐야겠다.
 """
-def sortList(self, head: ListNode) -> ListNode:
-        lst = []
+
+
+def sortList(head: ListNode) -> ListNode:
+        num_list = []
         pointer = head
         while pointer:
-            lst.append(pointer.val)
+            num_list.append(pointer.val)
             pointer = pointer.next
-        lst.sort()
+        num_list.sort()
         pointer = head
-        for l in lst:
-            pointer.val = l
+        for num in num_list:
+            pointer.val = num
             pointer = pointer.next
         return head
 
@@ -170,3 +153,73 @@ def sortList(self, head: ListNode) -> ListNode:
 병합정렬은 약 600ms, 각 리스트와 연결리스트로 변형하여 정렬하더라도 약 164ms 이므로 실제로는 내장함수를 이용하고
 이해는 병합정렬로 이해하는 것이 도움이 될 것같다.
 """
+
+
+"""
+내장함수로 정렬하여 다시 연결리스트를 만들 때 기존 연결리스트에 값을 덮어 씌웠지만 기존 연결리스트를 두고 새로운 연결리스트를 만들려면 아래와 같은 풀이를 이용하면 된다.
+"""
+
+
+def sortList(self, head: ListNode) -> ListNode:
+    num_list = []
+
+    node = head
+    while node:
+        num_list.append(node.val)
+        node = node.next
+
+    num_list.sort()
+
+    dummy = ListNode()
+    new_head = dummy
+    for num in num_list:
+        new_node = ListNode()
+        new_node.val = num
+        new_head.next = new_node
+        new_head = new_node
+
+    return dummy.next
+
+
+"""
+예전에 풀었던 문제를 다시 풀었다. 그전에는 풀이만 보고 이해만 하고 넘어갔는데 다시 풀면서 어디에서 막혔는지 점검하였다.
+병합정렬로 푼다고 했을 떄 이 문제에서 막혔던 부분은 2가지다.
+1. 연결리스트의 중앙을 어떻게 찾을 것인가?
+2. 분할한 연결리스트를 어떻게 병합할 것인가?
+"""
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution:
+    def merge(self, first_node, second_node):
+        if first_node and second_node:
+            if first_node.val > second_node.val:
+                first_node, second_node = second_node, first_node
+            first_node.next = self.merge(first_node.next, second_node)
+
+        return first_node or second_node
+
+    def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not (head and head.next):
+            return head
+        # 빠른 런너와 느린 런너로 연결리스트의 중앙 찾기
+        # mid 는 slow_runner 가 중앙을 찾으면 mid.next 를 None 으로 두어 연결리스트를 분할한다.
+        mid = None
+        fast_runner = slow_runner = head
+        while fast_runner and fast_runner.next:
+            mid = slow_runner
+            slow_runner = slow_runner.next
+            fast_runner = fast_runner.next.next
+        mid.next = None
+
+        # 분할하기
+        linked_list1 = self.sortList(head)
+        linked_list2 = self.sortList(slow_runner)
+
+        # 병합하기
+        return self.merge(linked_list1, linked_list2)
