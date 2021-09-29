@@ -223,3 +223,53 @@ class Solution:
 
         # 병합하기
         return self.merge(linked_list1, linked_list2)
+
+
+"""
+1. 연결리스트의 중앙을 어떻게 찾을 것인가?
+
+    1) 가장 먼저 떠오른건 연결리스트를 순회하면서 총 길이를 구하여 2로 나누는 것이다.
+    -> 이 연산만으로 시간복잡도가 O(N) 이 된다. 더 효율적이고 빠른 방법을 없을까?
+    ->그래서 런너 기법이 필요했다. 연결리스트의 중앙값을 구할 때는 런너 기법을 사용하면 된다는 것을 배웠다. 
+
+    2) 빠른 런너가 끝에 다다를때 느린런너는 중앙을 가리킨다. (길이가 짝수이면 두 노드 중 더 먼 노드를 가리킨다.)
+    -> 다른 방법도 있지만 런너 기법과 비슷했다.
+
+2. 분할한 연결리스트를 어떻게 병합할 것인가?
+
+    1) 각 연결리스트를 순회하면서 새로운 연결리스트를 만든다.
+    -> 길이가 N 인 연결리스트면 N-1 번 병합한다. 공간복잡도가 O(N) 이 된다.
+
+    2) 각 연결리스트를 순회하면서 각 노드의 값을 비교한다. 더 작은 노드의 next 를 더 큰 노드를 가리키게한다.
+    -> 한 연결리스트의 첫 번째 값이 다른 연결 리스트의 그다음 값들보다 항상 작은 것은 아니다. 그 예로  1 -> 2 -> 5 와 3 -> 4 의 연결리스트들을 대상으로 연산하면 문제가 생긴다.
+
+    3) 여기서 항상 참인 명제가 있다. 각 연결리스트는 정렬된 상황이고 첫 번째 노드의 값을 비교하여 더 작은 값이 전체 연결 리스트 중 가장 작은 값이라는 것이다.
+    -> 그러면 이 사실로 출발하여 각 연결리스트의 첫번째 값들 중 최솟값을 찾을 수 있다. 그 다음 값은 그 노드를 제외한 각 연결 리스트들의 첫번째 값 중 가장 작은 값이다.
+    -> 재귀 풀이하기 위해 첫번째 연결리스트를 항상 최소값을 가리키도록 하려고 위와 같은 풀이를 한 것이다. 재귀로 풀이할 수 있으면 반복문으로도 풀 수 있다.
+"""
+
+"""
+[재귀]
+if first_node and second_node:
+    if first_node.val > second_node.val:
+        first_node, second_node = second_node, first_node
+    first_node.next = self.merge(first_node.next, second_node)
+
+return first_node or second_node
+
+
+[반복문]
+head = tail = ListNode()
+while first_node and second_node:
+    if first_node.val <= second_node.val:
+        tail.next = first_node
+        tail = first_node
+        first_node = first_node.next
+    else:
+        tail.next = second_node
+        tail = second_node
+        second_node = second_node.next
+
+tail.next = first_node or second_node
+return head.next
+"""
