@@ -40,3 +40,34 @@ current 는 위치를 찾는 포인터가 된다.
 
 current 는 head 의 값이 current 보다 크지만 current.next 보단 작은 위치에 삽입된다.
 """
+
+
+"""
+너무 느리게 실행되어 최적화가 가능한 부분을 찾아보았다.
+current = parent 는 current 가 항상 맨앞으로 가게되는데 위에서 말한대로 "current 는 head 의 값이 current 보다 크지만 current.next 보단 작은 위치에 삽입된다."
+그러므로 head 의 값이 current 의 값보다 큰 경우 굳이 맨앞으로 이동할 필요가 없다. 
+
+그러면 다음과 같이 코드를 작성하면 된다.
+current = parent       ======>   if head and current.val > head.val:
+                                    current = parent
+"""
+
+
+class Solution:
+    def insertionSortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        current = parent = ListNode()
+        while head:
+            while current.next and current.next.val < head.val:
+                current = current.next
+
+            current.next, head.next, head = head, current.next, head.next
+            if head and current.val > head.val:
+                current = parent
+
+        return parent.next
+
+
+"""
+첫번째 풀이에서 조건문 추가하여 current 포인터를 맨앞으로 가야할 때만 옮기게만 하였는데 실행시간이 크게 줗었다.
+1932 ms -> 168 ms 으로 싱행시간이 약 10분의 1이 줄어들었다.
+"""
