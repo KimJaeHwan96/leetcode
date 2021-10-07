@@ -61,3 +61,47 @@ class Solution:
 i : red  j : white  k : blue 가 된다.
 white 가 움직이면 mid 값인 1 을 기준으로 스왑하고있다. 스왑한 후에는 그 위치의 값은 정렬이 됐으므로 blue 는 왼쪽, red 와 white 는 오른쪽으로 움직이고있다.  
 """
+
+"""
+위의 풀이보다 길어지고 깔끔하지는 않지만 훨씬 쉬운 방식도 있다.
+0, 1, 2 만 있다고 가정하였기 때문에 각 숫자들의 수를 구하고 기존 리스트에 그 수만큼 넣어주는 것이다. 
+"""
+
+
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        zero_cnt = 0
+        one_cnt = 0
+        two_cnt = 0
+
+        for idx in range(len(nums)):
+            if nums[idx] == 0:
+                zero_cnt += 1
+
+            elif nums[idx] == 1:
+                one_cnt += 1
+
+            elif nums[idx] == 2:
+                two_cnt += 1
+
+        idx = 0
+        while zero_cnt > 0:
+            nums[idx] = 0
+            idx += 1
+            zero_cnt -= 1
+
+        while one_cnt > 0:
+            nums[idx] = 1
+            idx += 1
+            one_cnt -= 1
+
+        while two_cnt > 0:
+            nums[idx] = 2
+            idx += 1
+            two_cnt -= 1
+
+
+"""
+똑같이 시간복잡도는 O(N) 이고 공간복잡도는 O(1) 이다.
+첫번째 풀이보다는 느릴 수 있겠지만 그렇게 차니는 나지 않는다.
+"""
